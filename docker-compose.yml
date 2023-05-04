@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      args:
+        user: digiliza
+        uid: 1000
+      context: .
+      dockerfile: php.dockerfile
+    image: digiliza
+    volumes:
+      - ./backend:/var/www
+    environment:
+      DB_HOST: ${MYSQL_HOSTNAME}
+      DB_DATABASE: ${MYSQL_DATABASE}
+      DB_USERNAME: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - database:/var/lib/mysql
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./backend:/var/www
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+  frontend:
+    build:
+      context: .
+      dockerfile: vue.dockerfile
+    ports:
+      - 3000:8080
+    volumes:
+      - ./frontend:/app
+volumes:
+  database:

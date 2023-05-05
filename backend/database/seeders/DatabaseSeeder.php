@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use \App\Models\Table;
+use \App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +16,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Table::factory(15)->create();
-        // \App\Models\User::factory(10)->create();
+        User::factory(1)->create();
     }
 }
